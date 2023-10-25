@@ -8,7 +8,6 @@ pygame.init()
 
 # Set up the Pygame window
 WINDOW_SIZE = (pygame.display.Info().current_w,pygame.display.Info().current_h)
-a=2
 screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
 
 
@@ -90,7 +89,7 @@ nn.train(X, y, epochs)
 
 
 # Create a dropdown menu
-options = ["Choose Op", "Histogram", "Brightness", "Scale",
+options = ["Choose Op","Convert", "Histogram", "Brightness", "Scale",
            "Rotate", "Convolution", "Morphological op", "chiffre slicing"]
 dropdown = pygame_gui.elements.UIDropDownMenu(options_list=options,
                                               starting_option=options[0],
@@ -109,6 +108,17 @@ dropdown_images = pygame_gui.elements.UIDropDownMenu(options_list=options_other,
                                                      relative_rect=pygame.Rect(
                                                          (10, 10), (200, 70)),
                                                      manager=manager)
+options_convert = ["choose","BIN","NG","RGB", "HSV", "YCbCr"]
+dropdown_convert_from= pygame_gui.elements.UIDropDownMenu(options_list=options_convert,
+                                                     starting_option="choose",
+                                                     relative_rect=pygame.Rect(
+                                                         (400, 550), (100, 50)),
+                                                     manager=manager)
+dropdown_convert_to= pygame_gui.elements.UIDropDownMenu(options_list=options_convert,
+                                                     starting_option="choose",
+                                                     relative_rect=pygame.Rect(
+                                                         (700, 550), (100, 50)),
+                                                     manager=manager)
 
 mask_list_input = pygame_gui.elements.UITextEntryLine(
     relative_rect=pygame.Rect(
@@ -121,6 +131,12 @@ submit_button = pygame_gui.elements.UIButton(
     relative_rect=pygame.Rect(
         (img_rect.left, img_rect.bottom+70), (image.get_size()[0], 50)),
     text="Submit",
+    manager=manager
+)
+convert_button = pygame_gui.elements.UIButton(
+    relative_rect=pygame.Rect(
+        (img_rect.left+70, img_rect.bottom+70), (80, 30)),
+    text="convert",
     manager=manager
 )
 
@@ -197,13 +213,14 @@ counteur = pygame_gui.elements.UIButton(
 
 def turn_on(l):
     list_of_widgets = [mask_list_input, submit_button, standart_input1, plus_button1, minus_button1,
-                       standart_input2, plus_button2, minus_button2, dilatation, erosion, counteur, reset, predicted_digits]
+                       standart_input2, plus_button2, minus_button2, dilatation, erosion, counteur, reset, predicted_digits,dropdown_convert_from,dropdown_convert_to,convert_button]
     for i, v in enumerate(list_of_widgets):
         if i in l:
-
-            v.visible = True
+            
+            v.show()
         else:
-            v.visible = False
+            v.hide()
+            
 
 
 turn_on([])
@@ -267,6 +284,13 @@ class Stage():
         screen.blit(image_erosion, img_rect)
         img_rect = image_counter.get_rect(center=(600, 388))
         screen.blit(image_counter, img_rect)
+        manager.draw_ui(screen)
+    def Convert_op(self):
+        manager.update(pygame.time.Clock().tick(60) / 1000.0)
+        img_rect = mor_image.get_rect(center=(200, 400))
+        screen.blit(mor_image, img_rect)
+        img_rect = image_dilatation.get_rect(center=(700, 400))
+        screen.blit(image_dilatation, img_rect)
         manager.draw_ui(screen)
 
     def chiffre_slicing(self):
@@ -415,6 +439,16 @@ while is_running:
                         reset_fun()
                         curreent_op = "Brightness"
                         turn_on([2, 3, 4, 11])
+                    if event.text=="Convert":
+                        dropdown_images.selected_option = "choose image"
+                        dropdown_images.remove_options(
+                            dropdown_images.options_list)
+                        dropdown_images.add_options(options_other)
+                        stage.state = "Convert"
+                        reset_fun()
+                        curreent_op = "Convert"
+                        
+                        turn_on([13,14,15])
                     if event.text == "Convolution":
                         dropdown_images.selected_option = "choose image"
                         dropdown_images.remove_options(
@@ -476,6 +510,8 @@ while is_running:
         stage.histogram()
     elif stage.state == "morphological op":
         stage.morphological_op()
+    elif stage.state == "Convert":
+        stage.Convert_op()
     elif stage.state == "chiffre slicing":
         stage.chiffre_slicing()
     pygame.display.update()
