@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+import cv2
 
 
 class NeuralNetwork:
