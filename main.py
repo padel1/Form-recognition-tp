@@ -8,7 +8,7 @@ pygame.init()
 
 # Set up the Pygame window
 WINDOW_SIZE = (pygame.display.Info().current_w,pygame.display.Info().current_h)
-a=1
+a=2
 screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
 
 
