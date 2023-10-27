@@ -11,12 +11,16 @@ WINDOW_SIZE = (pygame.display.Info().current_w,pygame.display.Info().current_h)
 screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
 
 
+
+
 image = pygame.transform.scale(
     pygame.image.load("images\penguin.jpg"), (300, 300))
 mor_image = pygame.transform.scale(
     pygame.image.load("images\circles.png"), (200, 200))
 image_erosion = pygame.transform.scale(
     pygame.image.load("images/background.png"), (200, 200))
+conv_background = pygame.transform.scale(
+    pygame.image.load("images/background.png"), (300, 300))
 num_image = pygame.transform.scale(
     pygame.image.load("images/test7.png"), (600, 200))
 image_dilatation = image_erosion.copy()
@@ -29,6 +33,7 @@ img_rect.topleft = (WINDOW_SIZE[0]//2 - image.get_size()
 
 manager = pygame_gui.UIManager(WINDOW_SIZE, "json.json")
 surfaces2 = []
+
 brightness_level = 0
 scale_level = 1
 rotation_factor = 0
@@ -100,7 +105,7 @@ dropdown = pygame_gui.elements.UIDropDownMenu(options_list=options,
 options_morphology = ["choose image", "circles", "geometric formes"]
 options_num = ["choose image", "test7",
                "test2", "test3", "test4", "test5", "test6", "test"]
-options_other = ["choose image",  "bakri", "wis", 
+options_other = ["choose image",  "bakri", "wis",
                  "penguin", "zizo lite", "man with glass"]
 
 dropdown_images = pygame_gui.elements.UIDropDownMenu(options_list=options_other,
@@ -216,11 +221,11 @@ def turn_on(l):
                        standart_input2, plus_button2, minus_button2, dilatation, erosion, counteur, reset, predicted_digits,dropdown_convert_from,dropdown_convert_to,convert_button]
     for i, v in enumerate(list_of_widgets):
         if i in l:
-            
+
             v.show()
         else:
             v.hide()
-            
+
 
 
 turn_on([])
@@ -287,10 +292,10 @@ class Stage():
         manager.draw_ui(screen)
     def Convert_op(self):
         manager.update(pygame.time.Clock().tick(60) / 1000.0)
-        img_rect = mor_image.get_rect(center=(200, 400))
-        screen.blit(mor_image, img_rect)
-        img_rect = image_dilatation.get_rect(center=(700, 400))
-        screen.blit(image_dilatation, img_rect)
+        img_rect = ((100,190))
+        screen.blit(conv_background, img_rect)
+        img_rect = ((800,190))
+        screen.blit(conv_background, img_rect)
         manager.draw_ui(screen)
 
     def chiffre_slicing(self):
@@ -412,12 +417,12 @@ while is_running:
                         if event.text != "choose image":
                             reset_fun()
                             num_image = pygame.transform.scale(
-                                    pygame.image.load(f"images\{event.text}.jpg"), (600, 200))  
+                                    pygame.image.load(f"images\{event.text}.jpg"), (600, 200))
 
                     elif curreent_op == "Morphological op":
                         if event.text != "choose image":
                             reset_fun()
-                            
+
                             mor_image = pygame.transform.scale(
                                 pygame.image.load(f"images\{event.text}.png"), (200, 200))
 
@@ -447,7 +452,7 @@ while is_running:
                         stage.state = "Convert"
                         reset_fun()
                         curreent_op = "Convert"
-                        
+
                         turn_on([13,14,15])
                     if event.text == "Convolution":
                         dropdown_images.selected_option = "choose image"
